@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tasks.commands;
 
 namespace Tasks
 {
@@ -37,6 +38,13 @@ namespace Tasks
 
 		private void Execute(string commandLine)
 		{
+            var parser = new CommandParser();
+            var commandObject = parser.Parse(commandLine);
+            if (commandObject != null)
+            {
+                commandObject.Execute(this, console);
+                return;
+            }
 			var commandRest = commandLine.Split(" ".ToCharArray(), 2);
 			var command = commandRest[0];
 			switch (command) {
@@ -66,7 +74,7 @@ namespace Tasks
 			foreach (var project in tasks) {
 				console.WriteLine(project.Key);
 				foreach (var task in project.Value) {
-					console.WriteLine("    [{0}] {1}: {2}", (task.Done ? 'x' : ' '), task.Id, task.Description);
+                    console.WriteLine(task.Format());					
 				}
 				console.WriteLine();
 			}
@@ -108,6 +116,25 @@ namespace Tasks
 		{
 			SetDone(idString, false);
 		}
+
+        public Task GetTask(int id)
+        {
+            var identifiedTask = tasks
+                .Select(project => project.Value.FirstOrDefault(task => task.Id == id))
+                .Where(task => task != null)
+                .FirstOrDefault();
+            if (identifiedTask == null)
+            {
+                console.WriteLine("Could not find a task with an ID of {0}.", id);
+                return null;
+            }
+            return identifiedTask;
+        }
+
+        public IEnumerable<Task> GetTaskByDeadline(Deadline deadline)
+        {
+            return tasks.SelectMany(project => project.Value.Where(task => task.Deadline == deadline));
+        }
 
 		private void SetDone(string idString, bool done)
 		{

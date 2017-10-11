@@ -82,7 +82,65 @@ namespace Tasks
 			Execute("quit");
 		}
 
-		private void Execute(string command)
+        [Test, Timeout(1000)]
+        public void Should_acept_deadlines()
+        {
+            Execute("add project secrets");
+            Execute("add task secrets Eat more donuts.");
+            Execute("deadline 1 2017-12-25"); 
+
+            Execute("show");
+            ReadLines(
+                "secrets",
+                "    [ ] 1: Eat more donuts. Due 2017-12-25",
+                ""
+            );
+
+            Execute("quit");
+        }
+
+        [Test, Timeout(1000)]
+        public void Should_display_today_task()
+        {
+            var today = DateTime.Now.ToString("yyyy-MM-dd");
+            var tomorrow = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+
+            Execute("add project demo");
+            Execute("add task demo Task 1.");
+            Execute("add task demo Task 2.");
+            Execute("add task demo Task 3.");
+            Execute($"deadline 1 {today}");
+            Execute($"deadline 2 {tomorrow}");
+
+            Execute("today");
+            ReadLines(
+                $"    [ ] 1: Task 1. Due {today}",
+                ""
+            );
+
+            Execute("quit");
+        }
+
+        /*[Test, Timeout(1000)]
+        public void Should_accept_an_arbitrary_id()
+        {
+            Execute("add project demo");
+            Execute("add task demo Task 1.");
+            Execute("add task demo Task 2.");
+            Execute("add task demo Task 3.");
+            Execute($"deadline 1 {today}");
+            Execute($"deadline 2 {tomorrow}");
+
+            Execute("today");
+            ReadLines(
+                $"    [ ] 1: Task 1. Due {today}",
+                ""
+            );
+
+            Execute("quit");
+        }*/
+
+        private void Execute(string command)
 		{
 			Read(PROMPT);
 			Write(command);
@@ -99,13 +157,13 @@ namespace Tasks
 		{
 			foreach (var line in expectedOutput)
 			{
-				Read(line + "\n");
+				Read(line + Environment.NewLine);
 			}
 		}
 
 		private void Write(string input)
 		{
-			console.SendInput(input + "\n");
+			console.SendInput(input + Environment.NewLine);
 		}
 	}
 }
