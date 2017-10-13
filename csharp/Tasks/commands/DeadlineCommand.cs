@@ -7,11 +7,11 @@ namespace Tasks.commands
         public DeadlineCommand(string args) : base(args)
         {
             var argsParts = args.Split(ARGS_SEPARATOR, 2);
-            TaskId = int.Parse(argsParts[0]);
+            TaskId = new TaskId(argsParts[0]);
             Deadline = new Deadline(argsParts[1]);
         }
 
-        public int TaskId { get; private set; }
+        public TaskId TaskId { get; private set; }
 
         public Deadline Deadline { get; private set; }
 
@@ -19,6 +19,11 @@ namespace Tasks.commands
         {
             var task = taskList.GetTask(TaskId);
             task.Deadline = Deadline;
+        }
+
+        public static new string GetArgsHelp()
+        {
+            return " <task ID> <date as xxxx-xx-xx>";
         }
     }
 }

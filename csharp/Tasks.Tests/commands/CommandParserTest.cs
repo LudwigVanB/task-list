@@ -13,6 +13,12 @@ namespace Tasks.commands
             Assert.IsInstanceOf<DeadlineCommand>(cmd);
         }
 
-
+        [Test]
+        public void CommandParser_should_recognize_add_task_command()
+        {
+            var parser = new CommandParser();
+            var cmd = parser.Parse("add task secrets Eat more donuts.");
+            Assert.IsInstanceOf<AddTaskCommand>(cmd);
+        }
     }
 }

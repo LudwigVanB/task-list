@@ -53,8 +53,8 @@ namespace Tasks
 		public string RetrieveOutput(int length)
 		{
 			var buffer = new char[length];
-			outputReader.ReadBlock(buffer, 0, length);
-			return new string(buffer);
+            outputReader.ReadBlock(buffer, 0, length);
+            return new string(buffer);
 		}
 	}
 }

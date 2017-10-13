@@ -121,24 +121,21 @@ namespace Tasks
             Execute("quit");
         }
 
-        /*[Test, Timeout(1000)]
+        [Test, Timeout(1000)]
         public void Should_accept_an_arbitrary_id()
         {
             Execute("add project demo");
-            Execute("add task demo Task 1.");
-            Execute("add task demo Task 2.");
-            Execute("add task demo Task 3.");
-            Execute($"deadline 1 {today}");
-            Execute($"deadline 2 {tomorrow}");
-
-            Execute("today");
+            Execute("add task demo id:toto Task 1.");
+            Execute("add task demo id:ab^$! Task 2.");
+            Execute("show");
             ReadLines(
-                $"    [ ] 1: Task 1. Due {today}",
+                "demo",
+                "    [ ] toto: Task 1.",
+                "    [ ] ab___: Task 2.",
                 ""
             );
-
             Execute("quit");
-        }*/
+        }
 
         private void Execute(string command)
 		{

@@ -30,6 +30,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="commands\AddTaskCommand.cs" />
     <Compile Include="commands\Command.cs" />
     <Compile Include="commands\CommandParser.cs" />
     <Compile Include="commands\DeadlineCommand.cs" />
@@ -40,5 +41,8 @@
     <Compile Include="Task.cs" />
     <Compile Include="IConsole.cs" />
     <Compile Include="RealConsole.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
 </Project>

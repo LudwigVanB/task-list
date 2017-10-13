@@ -10,7 +10,7 @@ namespace Tasks.commands
         public void DeadlineCommand_should_parse_task_id()
         {
             var cmd = new DeadlineCommand("1 2017-12-25");
-            Assert.AreEqual(1, cmd.TaskId);
+            Assert.AreEqual(new TaskId("1"), cmd.TaskId);
         }
 
         [Test]

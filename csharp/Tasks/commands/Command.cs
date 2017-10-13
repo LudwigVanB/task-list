@@ -11,6 +11,11 @@ namespace Tasks.commands
 
         public abstract void Execute(TaskList taskList, IConsole console);
 
+        public static string GetArgsHelp()
+        {
+            return "";
+        }
+
         protected readonly char[] ARGS_SEPARATOR = " ".ToCharArray();
     }
 }
