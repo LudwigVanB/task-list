@@ -21,6 +21,11 @@
             taskList.AddTask(_project, task);
         }
 
+        public static new string GetArgsHelp()
+        {
+            return " <project name> [id:<task id>] <task description>";
+        }
+
         private const string ID_PREFIX = "id:";
 
         private string _userTaskId; 
