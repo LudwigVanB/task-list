@@ -34,6 +34,7 @@
     <Compile Include="commands\Command.cs" />
     <Compile Include="commands\CommandParser.cs" />
     <Compile Include="commands\DeadlineCommand.cs" />
+    <Compile Include="commands\DeleteCommand.cs" />
     <Compile Include="commands\TodayCommand.cs" />
     <Compile Include="Deadline.cs" />
     <Compile Include="TaskId.cs" />

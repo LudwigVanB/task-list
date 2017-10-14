@@ -137,6 +137,22 @@ namespace Tasks
             Execute("quit");
         }
 
+        [Test, Timeout(1000)]
+        public void Should_delete_a_task()
+        {
+            Execute("add project demo");
+            Execute("add task demo Task 1.");
+            Execute("add task demo Task 2.");
+            Execute("delete 1");
+            Execute("show");
+            ReadLines(
+                "demo",
+                "    [ ] 2: Task 2.",
+                ""
+            );
+            Execute("quit");
+        }
+
         private void Execute(string command)
 		{
 			Read(PROMPT);

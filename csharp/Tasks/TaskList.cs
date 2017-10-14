@@ -151,6 +151,21 @@ namespace Tasks
 			identifiedTask.Done = done;
 		}
 
+        public void DeleteTask(TaskId id)
+        {
+            foreach (var projectTasks in tasks.Values )
+            {
+                foreach (var task in projectTasks)
+                {
+                    if (task.Id == id)
+                    {
+                        projectTasks.Remove(task);
+                        return;
+                    }
+                }
+            }
+        }
+
 		private void Help()
 		{
             var commandParser = new CommandParser();

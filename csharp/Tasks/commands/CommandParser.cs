@@ -50,7 +50,8 @@ namespace Tasks.commands
         {
             { "add task", typeof(AddTaskCommand) },
             { "deadline", typeof(DeadlineCommand) },
-            { "today", typeof(TodayCommand) }
+            { "today", typeof(TodayCommand) },
+            { "delete", typeof(DeleteCommand) }
         };
     }
 }
