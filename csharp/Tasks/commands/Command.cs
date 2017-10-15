@@ -9,7 +9,7 @@ namespace Tasks.commands
     {
         public Command(string args) { }
 
-        public abstract void Execute(TaskList taskList, IConsole console);
+        public abstract void Execute(ProjectRepository repository, IConsole console);
 
         public static string GetArgsHelp()
         {

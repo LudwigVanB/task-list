@@ -7,9 +7,9 @@
             _taskId = new TaskId(args);
         }
 
-        public override void Execute(TaskList taskList, IConsole console)
+        public override void Execute(ProjectRepository repository, IConsole console)
         {
-            taskList.DeleteTask(_taskId);
+            repository.DeleteTask(_taskId);
         }
 
         public static new string GetArgsHelp()

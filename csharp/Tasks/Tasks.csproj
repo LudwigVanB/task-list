@@ -30,16 +30,22 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="commands\AddProjectCommand.cs" />
     <Compile Include="commands\AddTaskCommand.cs" />
+    <Compile Include="commands\CheckCommand.cs" />
     <Compile Include="commands\Command.cs" />
     <Compile Include="commands\CommandParser.cs" />
     <Compile Include="commands\DeadlineCommand.cs" />
     <Compile Include="commands\DeleteCommand.cs" />
+    <Compile Include="commands\HelpCommand.cs" />
     <Compile Include="commands\TodayCommand.cs" />
+    <Compile Include="commands\UncheckCommand.cs" />
     <Compile Include="commands\ViewByDateCommand.cs" />
     <Compile Include="commands\ViewByProjectCommand.cs" />
     <Compile Include="Deadline.cs" />
     <Compile Include="Project.cs" />
+    <Compile Include="ProjectId.cs" />
+    <Compile Include="ProjectRepository.cs" />
     <Compile Include="TaskId.cs" />
     <Compile Include="TaskList.cs" />
     <Compile Include="Task.cs" />

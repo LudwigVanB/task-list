@@ -1,45 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Tasks
 {
     public class Project
     {
 
-        public Project(string name)
+        public Project(ProjectId id)
         {
-            _name = name;
+            Id = id;
         }
+
+        public ProjectId Id {get; private set;}
 
         public string Format()
         {
-            return _name;
-        }
+            return Id.Format();
+        }        
 
-        #region Equals
-        public override bool Equals(Object obj)
-        {
-            var otherProject = obj as Project;
-            if (otherProject == null) return false;
-            return _name == otherProject._name;
-        }
-
-        public bool Equals(Project otherProject)
-        {
-            if (otherProject == null) return false;
-            return _name == otherProject._name;
-        }
-
-        public override int GetHashCode()
-        {
-            return _name.GetHashCode();
-        }
-        #endregion
-
-        private string _name;
-
+        public IList<Task> Tasks { get; private set; } = new List<Task>();
 
     }
 

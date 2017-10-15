@@ -8,10 +8,10 @@ namespace Tasks.commands
         {
         }
 
-        public override void Execute(TaskList taskList, IConsole console)
+        public override void Execute(ProjectRepository repository, IConsole console)
         {
             var todayDeadline = new Deadline(DateTime.Today);
-            var todayTasks = taskList.GetTaskByDeadline(todayDeadline);
+            var todayTasks = repository.GetTaskByDeadline(todayDeadline);
             foreach (var task in todayTasks)
             {
                 console.WriteLine(task.Format());

@@ -15,10 +15,13 @@ namespace Tasks.commands
 
         public Deadline Deadline { get; private set; }
 
-        public override void Execute(TaskList taskList, IConsole console)
+        public override void Execute(ProjectRepository repository, IConsole console)
         {
-            var task = taskList.GetTask(TaskId);
-            task.Deadline = Deadline;
+            var task = repository.GetTask(TaskId);
+            if (task == null)            
+                console.WriteLine("Could not find a task with an ID of {0}.", task.Id.Format());
+            else
+                task.Deadline = Deadline;
         }
 
         public static new string GetArgsHelp()

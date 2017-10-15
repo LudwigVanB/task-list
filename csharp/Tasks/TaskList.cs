@@ -9,26 +9,25 @@ namespace Tasks
 	{
 		private const string QUIT = "quit";
 
-		private readonly IDictionary<Project, IList<Task>> tasks = new Dictionary<Project, IList<Task>>();
-		private readonly IConsole console;
+        private readonly ProjectRepository _repository = new ProjectRepository();
+        private readonly IConsole _console;
+        private readonly CommandParser _commandParser = new CommandParser();
 
-        public TaskId.TaskIdGenerator IdGenerator { get; private set; } = new TaskId.TaskIdGenerator();
-
-		public static void Main(string[] args)
+        public static void Main(string[] args)
 		{
 			new TaskList(new RealConsole()).Run();
 		}
 
 		public TaskList(IConsole console)
 		{
-			this.console = console;
+            _console = console;
 		}
 
 		public void Run()
 		{
 			while (true) {
-				console.Write("> ");
-				var command = console.ReadLine();
+				_console.Write("> ");
+				var command = _console.ReadLine();
 				if (command == QUIT) {
 					break;
 				}
@@ -38,149 +37,12 @@ namespace Tasks
 
 		private void Execute(string commandLine)
 		{
-            var parser = new CommandParser();
-            var commandObject = parser.Parse(commandLine);
+            var commandObject = _commandParser.Parse(commandLine, _console);
             if (commandObject != null)
             {
-                commandObject.Execute(this, console);
-                return;
-            }
-			var commandRest = commandLine.Split(" ".ToCharArray(), 2);
-			var command = commandRest[0];
-			switch (command) {
-			case "add":
-				Add(commandRest[1]);
-				break;
-			case "check":
-				Check(commandRest[1]);
-				break;
-			case "uncheck":
-				Uncheck(commandRest[1]);
-				break;
-			case "help":
-				Help();
-				break;
-			default:
-				Error(command);
-				break;
-			}
-		}
-
-		private void Add(string commandLine)
-		{
-			var subcommandRest = commandLine.Split(" ".ToCharArray(), 2);
-			var subcommand = subcommandRest[0];
-			if (subcommand == "project") {
-				AddProject(new Project(subcommandRest[1]));
-			} else {
-                Error($"add {subcommand}");                
-            }
-		}
-
-		private void AddProject(Project project)
-		{
-			tasks[project] = new List<Task>();
-		}
-
-        public void AddTask(Project project, Task task)
-        {
-            IList<Task> projectTasks = tasks[project];
-            if (projectTasks == null)
-            {
-                Console.WriteLine("Could not find a project with the name \"{0}\".", project);
-                return;
-            }
-            projectTasks.Add(task);
-        }
-
-        private void Check(string idString)
-		{
-			SetDone(idString, true);
-		}
-
-		private void Uncheck(string idString)
-		{
-			SetDone(idString, false);
-		}
-
-        public IEnumerable<Project> GetProjects()
-        {
-            return tasks.Keys;
-        }
-
-        public IEnumerable<Task> GetTasksByProject(Project project)
-        {
-            return tasks[project];
-        }
-
-        public Task GetTask(TaskId id)
-        {
-            var identifiedTask = tasks
-                .Select(project => project.Value.FirstOrDefault(task => task.Id == id))
-                .Where(task => task != null)
-                .FirstOrDefault();
-            if (identifiedTask == null)
-            {
-                console.WriteLine("Could not find a task with an ID of {0}.", id);
-                return null;
-            }
-            return identifiedTask;
-        }
-
-        public IEnumerable<Task> GetTaskByDeadline(Deadline deadline)
-        {
-            return tasks.SelectMany(project => project.Value.Where(task => task.Deadline == deadline));
-        }
-
-        public IEnumerable<Task> GetTasksByDate()
-        {
-            return tasks.SelectMany(project => project.Value).OrderBy(task => task.Deadline);
-        }
-
-		private void SetDone(string idString, bool done)
-		{
-			var id = new TaskId(idString);
-			var identifiedTask = tasks
-				.Select(project => project.Value.FirstOrDefault(task => task.Id == id))
-				.Where(task => task != null)
-				.FirstOrDefault();
-			if (identifiedTask == null) {
-				console.WriteLine("Could not find a task with an ID of {0}.", id);
-				return;
-			}
-
-			identifiedTask.Done = done;
-		}
-
-        public void DeleteTask(TaskId id)
-        {
-            foreach (var projectTasks in tasks.Values )
-            {
-                foreach (var task in projectTasks)
-                {
-                    if (task.Id == id)
-                    {
-                        projectTasks.Remove(task);
-                        return;
-                    }
-                }
-            }
-        }
-
-		private void Help()
-		{
-            var commandParser = new CommandParser();
-			console.WriteLine("Commands:");
-			console.WriteLine("  add project <project name>");
-			console.WriteLine("  check <task ID>");
-			console.WriteLine("  uncheck <task ID>");
-            commandParser.WriteHelp(console);
-			console.WriteLine();
-		}
-
-		private void Error(string command)
-		{
-			console.WriteLine("I don't know what the command \"{0}\" is.", command);
-		}
+                commandObject.Execute(_repository, _console);               
+            }            			
+		}			
+        
 	}
 }

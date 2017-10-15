@@ -6,9 +6,9 @@
         {
         }
 
-        public override void Execute(TaskList taskList, IConsole console)
+        public override void Execute(ProjectRepository repository, IConsole console)
         {
-            var orderedTasks = taskList.GetTasksByDate();
+            var orderedTasks = repository.GetTasksByDate();
             Deadline previousDate = null;
             foreach (var task in orderedTasks)
             {
