@@ -2,7 +2,7 @@
 
 namespace Tasks
 {
-    public class Deadline
+    public class Deadline : IComparable<Deadline>, IComparable
     {
         public static readonly Deadline NO_DEADLINE = new Deadline();
 
@@ -17,11 +17,12 @@ namespace Tasks
             _date = date;
         }
 
-        public string Format()
+        public string Format(string prefix = "", string noDate = "")
         {
-            return _date == null ? "" : $" Due {_date?.ToString("yyyy-MM-dd")}";
+            return _date == null ? noDate : $"{prefix}{_date?.ToString("yyyy-MM-dd")}";
         }
 
+        #region Equals
         public override bool Equals(Object obj)
         {
             var otherDeadline = obj as Deadline;
@@ -39,7 +40,7 @@ namespace Tasks
         {
             return _date?.GetHashCode() ?? 0;
         }
-
+        
         public static bool operator ==(Deadline a, Deadline b)
         {
             if (ReferenceEquals(a, b)) return true;
@@ -51,7 +52,20 @@ namespace Tasks
         {
             return !(a == b);
         }
+        #endregion
 
+        public int CompareTo(Deadline other)
+        {
+            if (_date == null && other._date == null) return 0;
+            else if (_date == null) return 1;
+            else if (other._date == null) return -1;
+            else return _date.Value.CompareTo(other._date.Value);
+        }
+
+        public int CompareTo(object obj)
+        {
+            return CompareTo((Deadline)obj);
+        }
 
         private Deadline()
         {

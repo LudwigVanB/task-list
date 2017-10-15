@@ -33,16 +33,18 @@ namespace Tasks
 			throw new Exception("The application is still running.");
 		}
 
-		[Test, Timeout(1000)]
-		public void ItWorks()
+		[Timeout(1000)]
+        //[TestCase("show")]
+        [TestCase("view by project")]
+        public void ItWorks(string showCommand)
 		{
-			Execute("show");
+			Execute(showCommand);
 
 			Execute("add project secrets");
 			Execute("add task secrets Eat more donuts.");
 			Execute("add task secrets Destroy all humans.");
 
-			Execute("show");
+			Execute(showCommand);
 			ReadLines(
 				"secrets",
 				"    [ ] 1: Eat more donuts.",
@@ -63,7 +65,7 @@ namespace Tasks
 			Execute("check 5");
 			Execute("check 6");
 
-			Execute("show");
+			Execute(showCommand);
 			ReadLines(
 				"secrets",
 				"    [x] 1: Eat more donuts.",
@@ -89,7 +91,7 @@ namespace Tasks
             Execute("add task secrets Eat more donuts.");
             Execute("deadline 1 2017-12-25"); 
 
-            Execute("show");
+            Execute("view by project");
             ReadLines(
                 "secrets",
                 "    [ ] 1: Eat more donuts. Due 2017-12-25",
@@ -127,7 +129,7 @@ namespace Tasks
             Execute("add project demo");
             Execute("add task demo id:toto Task 1.");
             Execute("add task demo id:ab^$! Task 2.");
-            Execute("show");
+            Execute("view by project");
             ReadLines(
                 "demo",
                 "    [ ] toto: Task 1.",
@@ -144,7 +146,7 @@ namespace Tasks
             Execute("add task demo Task 1.");
             Execute("add task demo Task 2.");
             Execute("delete 1");
-            Execute("show");
+            Execute("view by project");
             ReadLines(
                 "demo",
                 "    [ ] 2: Task 2.",
@@ -152,6 +154,35 @@ namespace Tasks
             );
             Execute("quit");
         }
+
+        [Timeout(1000)]
+        [TestCase("view by date")]
+        [TestCase("view by deadline")]
+        public void Should_list_task_by_date(string command)
+        {
+            Execute("add project demo");
+            Execute("add task demo Task 1.");
+            Execute("add task demo Task 2.");
+            Execute("add task demo Task 3.");
+            Execute("add task demo Task 4.");
+            Execute($"deadline 1 2017-12-25");
+            Execute($"deadline 3 2017-11-01");
+            Execute($"deadline 4 2017-12-25");
+            Execute(command);
+            ReadLines(
+                "2017-11-01",
+                "    [ ] 3: Task 3.",
+                "",
+                "2017-12-25",
+                "    [ ] 1: Task 1.",
+                "    [ ] 4: Task 4.",
+                "",
+                "No date",
+                "    [ ] 2: Task 2.",
+                ""
+            );
+            Execute("quit");
+        }        
 
         private void Execute(string command)
 		{

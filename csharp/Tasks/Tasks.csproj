@@ -36,7 +36,10 @@
     <Compile Include="commands\DeadlineCommand.cs" />
     <Compile Include="commands\DeleteCommand.cs" />
     <Compile Include="commands\TodayCommand.cs" />
+    <Compile Include="commands\ViewByDateCommand.cs" />
+    <Compile Include="commands\ViewByProjectCommand.cs" />
     <Compile Include="Deadline.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="TaskId.cs" />
     <Compile Include="TaskList.cs" />
     <Compile Include="Task.cs" />

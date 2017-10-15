@@ -15,15 +15,12 @@ namespace Tasks.commands
             var commandParts = commandLine.Split(COMMAND_SEPARATOR,2);
             var commandName = commandParts[0];
             var commandRests = commandParts.Length > 1 ? commandParts[1] : null;
-            if (! _nameToCommandClass.TryGetValue(commandName, out Type commandType))
+            Type commandType;
+            while(!_nameToCommandClass.TryGetValue(commandName, out commandType) && commandRests != null)
             {
-                if (commandRests != null)
-                {
-                    var commandRestsParts = commandRests.Split(COMMAND_SEPARATOR, 2);
-                    commandName = $"{commandName}{COMMAND_SEPARATOR[0]}{commandRestsParts[0]}";
-                    commandRests = commandRestsParts.Length > 1 ? commandRestsParts[1] : null;
-                    _nameToCommandClass.TryGetValue(commandName, out commandType);
-                }                   
+                var commandRestsParts = commandRests.Split(COMMAND_SEPARATOR, 2);
+                commandName = $"{commandName}{COMMAND_SEPARATOR[0]}{commandRestsParts[0]}";
+                commandRests = commandRestsParts.Length > 1 ? commandRestsParts[1] : null;
             }
             if (commandType != null)
             {
@@ -51,6 +48,9 @@ namespace Tasks.commands
             { "add task", typeof(AddTaskCommand) },
             { "deadline", typeof(DeadlineCommand) },
             { "today", typeof(TodayCommand) },
+            { "view by project", typeof(ViewByProjectCommand) },
+            { "view by date", typeof(ViewByDateCommand) },
+            { "view by deadline", typeof(ViewByDateCommand) },
             { "delete", typeof(DeleteCommand) }
         };
     }

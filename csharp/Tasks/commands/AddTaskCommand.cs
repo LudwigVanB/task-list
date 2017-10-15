@@ -5,7 +5,7 @@
         public AddTaskCommand(string args) : base(args)
         {
             var argsParts = args.Split(ARGS_SEPARATOR, 2);
-            _project = argsParts[0];
+            _project = new Project(argsParts[0]);
             if (argsParts[1].StartsWith(ID_PREFIX))
             {
                 argsParts = argsParts[1].Split(ARGS_SEPARATOR, 2);
@@ -29,7 +29,7 @@
         private const string ID_PREFIX = "id:";
 
         private string _userTaskId; 
-        private string _project;
+        private Project _project;
         private string _description;
 
     }

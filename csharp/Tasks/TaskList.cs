@@ -9,7 +9,7 @@ namespace Tasks
 	{
 		private const string QUIT = "quit";
 
-		private readonly IDictionary<string, IList<Task>> tasks = new Dictionary<string, IList<Task>>();
+		private readonly IDictionary<Project, IList<Task>> tasks = new Dictionary<Project, IList<Task>>();
 		private readonly IConsole console;
 
         public TaskId.TaskIdGenerator IdGenerator { get; private set; } = new TaskId.TaskIdGenerator();
@@ -48,9 +48,6 @@ namespace Tasks
 			var commandRest = commandLine.Split(" ".ToCharArray(), 2);
 			var command = commandRest[0];
 			switch (command) {
-			case "show":
-				Show();
-				break;
 			case "add":
 				Add(commandRest[1]);
 				break;
@@ -69,34 +66,23 @@ namespace Tasks
 			}
 		}
 
-		private void Show()
-		{
-			foreach (var project in tasks) {
-				console.WriteLine(project.Key);
-				foreach (var task in project.Value) {
-                    console.WriteLine(task.Format());					
-				}
-				console.WriteLine();
-			}
-		}
-
 		private void Add(string commandLine)
 		{
 			var subcommandRest = commandLine.Split(" ".ToCharArray(), 2);
 			var subcommand = subcommandRest[0];
 			if (subcommand == "project") {
-				AddProject(subcommandRest[1]);
+				AddProject(new Project(subcommandRest[1]));
 			} else {
                 Error($"add {subcommand}");                
             }
 		}
 
-		private void AddProject(string name)
+		private void AddProject(Project project)
 		{
-			tasks[name] = new List<Task>();
+			tasks[project] = new List<Task>();
 		}
 
-        public void AddTask(string project, Task task)
+        public void AddTask(Project project, Task task)
         {
             IList<Task> projectTasks = tasks[project];
             if (projectTasks == null)
@@ -117,6 +103,16 @@ namespace Tasks
 			SetDone(idString, false);
 		}
 
+        public IEnumerable<Project> GetProjects()
+        {
+            return tasks.Keys;
+        }
+
+        public IEnumerable<Task> GetTasksByProject(Project project)
+        {
+            return tasks[project];
+        }
+
         public Task GetTask(TaskId id)
         {
             var identifiedTask = tasks
@@ -134,6 +130,11 @@ namespace Tasks
         public IEnumerable<Task> GetTaskByDeadline(Deadline deadline)
         {
             return tasks.SelectMany(project => project.Value.Where(task => task.Deadline == deadline));
+        }
+
+        public IEnumerable<Task> GetTasksByDate()
+        {
+            return tasks.SelectMany(project => project.Value).OrderBy(task => task.Deadline);
         }
 
 		private void SetDone(string idString, bool done)
@@ -170,7 +171,6 @@ namespace Tasks
 		{
             var commandParser = new CommandParser();
 			console.WriteLine("Commands:");
-			console.WriteLine("  show");
 			console.WriteLine("  add project <project name>");
 			console.WriteLine("  check <task ID>");
 			console.WriteLine("  uncheck <task ID>");

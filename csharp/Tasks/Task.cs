@@ -13,13 +13,13 @@ namespace Tasks
 
         public Deadline Deadline { get; internal set; } = Deadline.NO_DEADLINE;
 
-        public string Format()
+        public string Format(bool showDeadline = true)
         {
             return string.Format("    [{0}] {1}: {2}{3}",
                 (Done ? 'x' : ' '),
                 Id.Format(),
                 Description,
-                Deadline.Format() );
+                showDeadline ? Deadline.Format(prefix: " Due ") : "");
         }
     }
 }
